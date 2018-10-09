@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>后台管理系统登陆</title>
+    <header th:include="common/header::header"></header>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico"/>
+    <link rel="stylesheet" href="/css/login.css"/>
+</head>
+<body>
+<div class="layui-carousel video_mask" id="login_carousel">
+    <div carousel-item="">
+        <div class="carousel_div1"></div>
+        <div class="carousel_div2"></div>
+        <div class="carousel_div3"></div>
+    </div>
+    <div class="login layui-anim layui-anim-up">
+        <h1>Radar 后台管理系统</h1>
+        <form class="layui-form" method="post">
+            <div class="layui-form-item">
+                <input type="text" id="userId" name="userId" lay-verify="required" placeholder="请输入账号" autocomplete="off" value=""
+                       class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="password" id="passWord" name="passWord" lay-verify="required" placeholder="请输入密码" autocomplete="off"
+                       value="" class="layui-input"/>
+            </div>
+
+            <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登陆系统</button>
+        </form>
+    </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script src="/js/login.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.TaskRepository">
+	<resultMap id="BaseResultMap"
+		type="com.ppdai.infrastructure.radar.biz.entity.TaskEntity">
+		  <result column="id" property="id"/>
+	      <result column="app_id" property="appId"/>
+	      <result column="msg" property="msg"/>
+	      <result column="insert_by" property="insertBy"/>
+	      <result column="insert_time" property="insertTime"/>
+	      <result column="update_by" property="updateBy"/>
+	      <result column="update_time" property="updateTime"/>
+	      <result column="is_active" property="isActive"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, app_id, msg,insert_by, insert_time, update_by,
+		update_time, is_active
+	</sql>
+	<select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap"
+		useCache="false">
+		select
+		app_id
+		from task
+		where id = #{id}
+	</select>
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from task
+		where id = #{id}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.TaskEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into task (app_id)values( #{appId})
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List"
+		 keyProperty="id">
+		insert into task (app_id)
+		values
+		<foreach collection="taskLst" item="item" index="index"
+			separator=",">
+			(#{item.appId})
+		</foreach>
+	</insert>
+	
+	<select id="getMaxId" parameterType="java.lang.Long" resultType="java.lang.Long"
+		useCache="false">
+		<![CDATA[
+		  select max(id) from task where id>#{maxId1} and id<=#{maxId2}
+		]]>
+	</select>
+	<select id="getMaxId1" useCache="false" resultType="java.lang.Long">
+		select max(id) from task
+	</select>
+	<select id="getMinId" useCache="false" resultType="java.lang.Long">
+		select min(id) from task
+	</select>
+	<delete id="clearOld">
+        <![CDATA[
+		delete from task where id<#{id} and insert_time< TIMESTAMPADD(second, -#{clearOldTime}, current_timestamp )
+		]]>
+	</delete>
+</mapper>

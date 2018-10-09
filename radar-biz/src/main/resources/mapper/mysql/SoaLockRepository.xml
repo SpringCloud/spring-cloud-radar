@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.SoaLockRepository">
+	<resultMap id="BaseResultMap"
+		type="com.ppdai.infrastructure.radar.biz.entity.SoaLockEntity">
+		<!-- <id column="id" jdbcType="BIGINT" property="id" /> -->
+		<!-- <result column="ip" jdbcType="VARCHAR" property="ip" /> -->
+		<!-- <result column="key1" jdbcType="VARCHAR" property="key1" /> -->
+		<!-- <result column="heartTime" jdbcType="TIMESTAMP" property="heart_time" 
+			/> -->
+		<!-- <result column="insert_by" jdbcType="VARCHAR" property="insertBy" 
+			/> -->
+		<!-- <result column="insert_time" jdbcType="TIMESTAMP" property="insertTime" 
+			/> -->
+		<!-- <result column="update_by" jdbcType="VARCHAR" property="updateBy" 
+			/> -->
+		<!-- <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" 
+			/> -->
+		<!-- <result column="is_active" jdbcType="TINYINT" property="isActive" 
+			/> -->
+
+		<result column="id" property="id" />
+		<result column="ip" property="ip" />
+		<result column="key1" property="key1" />
+		<result column="heart_time" property="heartTime" />
+		<result column="insert_by" property="insertBy" />
+		<result column="insert_time" property="insertTime" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_time" property="updateTime" />
+		<result column="is_active" property="isActive" />
+		<result column="dbNow" property="dbNow" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, ip, key1, heart_time,insert_by, insert_time, update_by,
+		update_time, is_active
+	</sql>
+	<select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap"
+		useCache="false">
+		select
+		id, ip, key1, heart_time,insert_by, insert_time,
+		update_by, update_time, is_active,CURRENT_TIMESTAMP as dbNow
+		from
+		soa_lock
+		where id = #{id}
+	</select>
+
+	<insert id="insert"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.SoaLockEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into soa_lock (ip, key1)
+		values (#{ip}, #{key1})
+	</insert>
+	<update id="update"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.SoaLockEntity">
+		update soa_lock
+		set ip = #{ip},
+		key1 = #{key1},
+		update_time = CURRENT_TIMESTAMP,
+		where id = #{id}
+	</update>
+	<update id="updateHeartTimeByKey1">
+	 <![CDATA[
+		update soa_lock set heart_time=CURRENT_TIMESTAMP , ip=#{ip} where key1=#{key1} and	heart_time < TIMESTAMPADD(second, -#{lockInterval}, current_timestamp )
+		]]>
+	</update>
+	<update id="updateHeartTimeByIdAndIp">
+		update soa_lock set heart_time=CURRENT_TIMESTAMP
+		where id=#{id} and ip=#{ip}
+	</update>
+	<select id="getDbNow" resultType="java.util.Date" useCache="false">
+		select CURRENT_TIMESTAMP
+	</select>
+	<delete id="deleteOld">
+		delete from soa_lock where
+		heart_time&lt;TIMESTAMPADD(SECOND, -#{lockInterval}, CURRENT_TIMESTAMP
+		) and key1 = #{key1}
+	</delete>
+	<select id="findByKey1" resultMap="BaseResultMap" useCache="false">
+		select
+		id, ip, key1, heart_time,insert_by, insert_time, update_by,
+		update_time, is_active,CURRENT_TIMESTAMP as dbNow
+		from soa_lock
+		where
+		key1 = #{key1}
+	</select>
+
+
+	<select id="countBy" parameterType="Map" resultType="long">
+		select count(*) from soa_lock
+		<if test="pageIndex !=null and pageSize !=''">
+			limit #{pageIndex},#{pageSize}
+		</if>
+	</select>
+
+	<select id="findBy" parameterType="Map" resultMap="BaseResultMap">
+		select * from soa_lock
+		<if test="pageIndex !=null and pageSize !=''">
+			limit #{pageIndex},#{pageSize}
+		</if>
+	</select>
+</mapper>

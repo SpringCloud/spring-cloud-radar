@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+
+&nbsp;
+<form class="layui-form">
+    <div class="layui-form-item layui-inline">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-inline" style="width:120px;">
+                <select name="statusSelect" lay-filter="statusSelect">
+                    <option value="0">全部</option>
+                    <option value="1">在线</option>
+                    <option value="2">不在线</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">ID：</label>
+            <div class="layui-input-inline" style="width:120px;">
+                <input type="text" value="" id="ID" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">集群名：</label>
+            <div class="layui-input-inline" style="width:120px;">
+                <input type="text" value="" id="clusterName" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">应用ID：</label>
+            <div class="layui-input-inline" >
+                <input type="text" value="" id="appId" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">应用名：</label>
+            <div class="layui-input-inline" >
+                <input type="text" value="" id="appName" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">IP：</label>
+            <div class="layui-input-inline" >
+                <input type="text" value="" id="ip" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <a class="layui-btn servSearchList_btn" lay-filter="servSearchFilter"><i
+                    class="layui-icon">&#xe615;</i>查询</a>
+        </div>
+    </div>
+</form>
+<table class="layui-table"
+       lay-data="{height:'full',url:'/app/instance/my/data', page:true,limit: 10, id:'instanceTableId'}"
+       lay-filter="instanceTableId">
+    <thead>
+    <tr>
+        <th lay-data="{field: 'left',align: 'center', toolbar: '#viewBar',width:'4%'}"
+            rowspan="2">查看
+        </th>
+        <th lay-data="{field: 'id', align: 'center', sort: true,width:'4%'}"
+            rowspan="2">ID
+        </th>
+        <th lay-data="{field: 'appName', align: 'center', sort: true,width:'12%'}"
+            rowspan="2">应用名
+        </th>
+        <th lay-data="{field: 'candAppId', align: 'center',width:'10%',templet: '#appIdTpl'}"
+            rowspan="2">应用ID
+        </th>
+        <th lay-data="{field: 'appClusterName', align: 'center',width:'9%'}"
+            rowspan="2">集群名
+        </th>
+        <th lay-data="{align: 'center'}" colspan="2">状态</th>
+        <th lay-data="{field: 'supperStatus', align: 'center', templet: '#supperStatusTpl', width:'9%'}"
+            rowspan="2">一键启停
+        </th>
+        <th lay-data="{field: 'finalStatus', align: 'center', templet: '#finalStatusTpl',width:'6%'}" rowspan="2">最终状态
+        </th>
+        <th lay-data="{field: 'ip', align: 'center',width:'8%'}" rowspan="2">IP</th>
+        <th lay-data="{field: 'port', align: 'center', width:'4%'}" rowspan="2">Port</th>
+        <th lay-data="{field: 'heartTime', align: 'center',width:'12%'}"
+            rowspan="2">心跳时间
+        </th>
+        <th lay-data="{field: 'ownerName', align: 'center',width:'4%'}"
+            rowspan="2">负责人
+        </th>
+    </tr>
+    <tr>
+        <th lay-data="{field: 'heartStatus', align: 'center', templet: '#heartStatusTpl',width:'9%'}">心跳
+        </th>
+        <th lay-data="{field: 'pubStatus', align: 'center', templet: '#publishStatusTpl',event:'setPublish',width:'9%'}">
+            拉入/拉出
+        </th>
+    </tr>
+    </thead>
+</table>
+
+<script th:src="@{/layui/layui.js}"></script>
+
+<script th:src="@{/js/instanceList.js}"></script>
+
+<script th:src="@{/js/jquery-1.11.1.min.js}"></script>
+
+<script type="text/html" id="viewBar">
+    <div lay-event="instance_expand">
+        <i class="layui-icon">&#xe615;</i>
+    </div>
+</script>
+
+<script type="text/html" id="heartStatusTpl">
+    {{#  if(d.heartStatus==1){ }}
+    <i class="layui-icon icon-yes">&#xe618;</i>
+    {{#  } else { }}
+    <i class="layui-icon icon-no">&#x1006;</i>
+    {{#  } }}
+
+</script>
+
+<script type="text/html" id="publishStatusTpl">
+    {{#  if(d.role==0||d.role==1){ }}
+    <div class="{{publishStaStyle[d.pubStatus]}}" lay-skin="_switch"><em>{{publishStatusMsg[d.pubStatus]}}</em><i></i>
+    </div>
+    {{#  } else { }}
+    <i class="{{publishIcon[d.pubStatus]}}">{{publishColor[d.pubStatus]}}</i>
+    {{#  } }}
+
+</script>
+
+<script type="text/html" id="supperStatusTpl">
+    {{#  if(d.role==0||d.role==1){ }}
+    <div class="layui-inline">
+        <label><span
+                class="{{supperStatusColor[d.supperStatus+1]}}">{{supperStatusMsg[d.supperStatus+1]}}</span></label>
+        &nbsp;
+        <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="supperStatusEdit">
+            <i class="layui-icon">&#xe642;</i>
+        </button>
+    </div>
+    {{#  } else { }}
+    <label><span class="{{supperStatusColor[d.supperStatus+1]}}">{{supperStatusMsg[d.supperStatus+1]}}</span></label>
+    {{#  } }}
+
+</script>
+
+<script type="text/html" id="finalStatusTpl">
+    {{#  if(d.finalStatus==1){ }}
+    <i class="layui-icon icon-yes">&#xe618;</i>
+    {{#  } else { }}
+    <i class="layui-icon icon-no">&#x1006;</i>
+    {{#  } }}
+</script>
+
+
+<script type="text/html" id="appIdTpl">
+    {{d.candAppId}}
+</script>
+
+<style type="text/css">
+    .layui-form-onswitch1 {
+        border-color: #5FB878;
+        background-color: #5FB878;
+    }
+
+    .layui-form-onswitch1 em {
+        left: 5px;
+        right: auto;
+        color: #fff !important;
+    }
+
+    .layui-form-onswitch1 i {
+        left: 32px;
+        background-color: #fff;
+    }
+
+    .warn1 {
+        color: red;
+        font-size: large;
+        font-weight: bold;
+    }
+
+    .layui-table-cell {
+        padding: 0 5px !important;
+    }
+
+    .icon-yes {
+        font-size: 30px;
+        color: #5FB878;
+    }
+
+    .icon-no {
+        font-size: 30px;
+        color: #e60000;
+        font-weight: 900;
+    }
+
+    .spCount {
+        color: #F581B1;
+    }
+
+    .spuerStatusText {
+        color: #F581B1;
+        font-weight: bold;
+    }
+.layui-form-label{
+       width:auto!important;
+       padding:9px 5px!important;
+    }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.AppRepository">
+	<resultMap id="BaseResultMap"
+		type="com.ppdai.infrastructure.radar.biz.entity.AppEntity">
+		  <result column="id" property="id"/>
+	      <result column="cand_app_id" property="candAppId"/>
+	      <result column="app_name" property="appName"/>
+	      <result column="department_id" property="departmentId"/>
+	      <result column="department_name" property="departmentName"/>
+	      <result column="owner_name" property="ownerName"/>
+	      <result column="owner_id" property="ownerId"/>
+	      <result column="owner_email" property="ownerEmail"/>
+	      <result column="member_id" property="memberId"/>
+	      <result column="member_name" property="memberName"/>
+	      <result column="member_email" property="memberEmail"/>
+	      <result column="allow_cross" property="allowCross"/>
+	      <result column="domain" property="domain"/>
+	      <result column="alarm" property="alarm"/>
+	      <result column="version" property="version"/>
+	      <result column="insert_by" property="insertBy"/>
+	      <result column="insert_time" property="insertTime"/>
+	      <result column="update_by" property="updateBy"/>
+	      <result column="update_time" property="updateTime"/>
+	      <result column="is_active" property="isActive"/>
+	</resultMap>
+	
+	<select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap"
+		useCache="false">
+		select *
+		from app
+		where id = #{id}
+	</select>
+	
+	<insert id="insert"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.AppEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		   INSERT INTO app(cand_app_id,app_name)VALUES(#{candAppId},#{appName})
+   
+	</insert>
+	<update id="updateVersionByIds" parameterType="java.util.List">
+		update app set version=version+1 where id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</update>
+	<select id="findByCandAppId" resultMap="BaseResultMap" useCache="false">
+		SELECT * FROM app WHERE	cand_app_id=#{candAppId}
+	</select>	
+	<select id="findAll" resultMap="BaseResultMap" useCache="false">
+		select * from app
+	</select>	
+	<select id="getLastServ"
+		resultMap="BaseResultMap" useCache="false">
+		<![CDATA[
+		select * from app where id in (select distinct app_id
+		from task where	id>=#{minTaskId} and id<=#{maxTaskId})
+		]]>
+	</select>
+	<select id="getMaxUpdateDate" resultType="java.util.Date"
+		useCache="false">
+		select max(update_time) from app
+	</select>
+	<select id="getUpdateData" resultMap="BaseResultMap" useCache="false">
+		select * from app where update_time>#{updateTime}
+	</select>
+</mapper>

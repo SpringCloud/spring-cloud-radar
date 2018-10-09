@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>用户操作指南</legend>
+</fieldset>
+<div class="layui-collapse" lay-filter="test">
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">关于"后台首页"</h2>
+        <div class="layui-colla-content layui-text">
+            <ul>
+                <li>"后台首页"默认显示"实例"的信息列表</li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">关于"实例"</h2>
+        <div class="layui-colla-content layui-text">
+            <ul>
+                <li>用户点击"实例"列表左侧的查看图标<i class="layui-icon">&#xe615;</i>，可以查看该条实例的"详情展示".详情展示包括：该实例的详细信息、所属应用的信息、所属集群的信息、操作日志。</li>
+                <li>"心跳"有两种状态。<i class="layui-icon icon-yes">&#xe618;</i>表示实例有心跳，<i class="layui-icon icon-no">&#x1006;</i>表示实例没有心跳，没有心跳是因为实例下线或者心跳异常。</li>
+                <li>"拉入/拉出"。当用户已经登录并且是管理员时,会显示两种按钮，<div class="layui-form-switch layui-form-onswitch1" lay-skin="_switch"><em>up</em><i></i></div>表示实例已经发布，<div class="layui-form-switch" lay-skin="_switch"><em>down</em><i></i></div>表示实例未发布，管理员用户可以通过按钮来改变"实例"的发布状态.当用户未登录或者不是管理员时,会显示两种图标，<i class="layui-icon icon-yes">&#xe618;</i>表示实例已发布，<i class="layui-icon icon-no">&#x1006;</i>表示实例未发布。</li>
+                <li>管理员：当登录用户角色是admin，并且登录用户的部门与实例所在的部门一致时，该用户则为管理员</li>
+                <li>"一键启停"可以强制实例进行上线或者下线，它拥有三种状态，<label><span class="layui-badge layui-bg-green">在线</span></label>表示实例已经上线，<label><span class="layui-badge">下线</span></label>表示是实例已经下线，<label><span class="layui-badge layui-bg-gray">禁用</span></label>表示未开启'一键启停'功能。当用户已经登录并且是管理员时，会显示一个图标和一个按钮，管理员可以通过右侧按钮来使用'一键启停'功能。</li>
+                <li>"最终状态"显示实例最终的在线状态，<i class="layui-icon icon-yes">&#xe618;</i>表示实例在线，<i class="layui-icon icon-no">&#x1006;</i>表示实例离线.当启用"一键启停"功能时,'最终状态'由'一键启停'的状态决定.当未启用"一键启停"功能时，'最终状态'由'心跳'和'拉入/拉出'的状态共同决定(即当'心跳'和'拉入/拉出'都在线时，最终状态才是在线状态)。</li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">关于"我的实例"</h2>
+        <div class="layui-colla-content layui-text">
+            <ul>
+                <li>用户登录之后,才可以查看"我的实例"</li>
+                <li>"我的实例"是用户所在部门的"实例"，只有该部门的管理员才有操作权限。</li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">关于"登录"</h2>
+        <div class="layui-colla-content layui-text">
+            <ul>
+                <li>点击右上侧的"登录"，会进入pauth系统，进行授权登录。</li>
+                <li>使用域账号即可登录。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+
+<script th:src="@{/js/jquery-1.11.1.min.js}"></script>
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        //监听折叠
+        element.on('collapse(test)', function(data){
+        });
+    });
+</script>
+
+
+<style type="text/css">
+    .layui-form-onswitch1 {
+        border-color: #5FB878;
+        background-color: #5FB878;
+    }
+
+    .layui-form-onswitch1 em {
+        left: 5px;
+        right: auto;
+        color: #fff !important;
+    }
+
+    .layui-form-onswitch1 i {
+        left: 32px;
+        background-color: #fff;
+    }
+
+    .warn1 {
+        color: red;
+        font-size: large;
+        font-weight: bold;
+    }
+
+    .layui-table-cell {
+        padding: 0 5px !important;
+    }
+
+    .icon-yes {
+        font-size: 30px;
+        color: #5FB878;
+    }
+
+    .icon-no {
+        font-size: 30px;
+        color: #e60000;
+        font-weight: 900;
+    }
+
+    .spCount {
+        color: #F581B1;
+    }
+
+    .spuerStatusText {
+        color: #F581B1;
+        font-weight: bold;
+    }
+
+</style>
+</body>
+</html>

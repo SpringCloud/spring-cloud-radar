@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+<table class="layui-table" lay-data="{height:'full', page:true,limit: 10, id:'appTableId'}" lay-filter="appTableId">
+    <thead>
+    <tr>
+        <th lay-data="{field: 'id', align: 'center', sort: true, width:70}" rowspan="2">ID</th>
+        <th lay-data="{field: 'candAppId', align: 'center', width:260}" rowspan="2">应用ID</th>
+        <th lay-data="{field: 'appName', align: 'center', width:360}" rowspan="2">应用名</th>
+        <th lay-data="{field: 'domain', align: 'center',width:200}" rowspan="2">域名</th>
+        <th lay-data="{field: 'version', align: 'center',width:100}">版本</th>
+        <th lay-data="{field: 'departmentName', align: 'center', width:200}" rowspan="2">部门</th>
+        <th lay-data="{field: 'ownerName',align: 'center', width:200}" rowspan="2">负责人</th>
+        <th lay-data="{field: 'ownerEmail',align: 'center', width:290}" rowspan="2">负责人邮箱</th>
+        <th lay-data="{field: 'left',align: 'center', toolbar: '#servUpdate',width:70}">推送</th>
+    </tr>
+    </thead>
+</table>
+<input type="hidden" id="instanceId" th:value="${instanceId}"/>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/appList.js}"></script>
+
+<script type="text/html" id="servUpdate">
+    <div class="layui-inline">
+        <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="servUpdate">
+            <i class="myiconfont icon-gengxin"></i>
+        </button>
+    </div>
+</script>
+
+<style type="text/css">
+    .warn1 {
+        color: red;
+        font-size: large;
+        font-weight: bold;
+    }
+</style>
+
+</body>
+</html>

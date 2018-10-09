@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.UiConnectionsRepository">
+
+    <select id="maxConnectionsCount"  resultType="java.util.Map">
+        show variables like 'max_connections'
+    </select>
+
+    <select id="connectionsCount"  resultType="java.util.Map">
+       show status like 'Threads_running'
+    </select>
+
+
+</mapper>

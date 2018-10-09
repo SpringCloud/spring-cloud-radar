@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+<header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+	&nbsp;
+	<form class="layui-form">
+		<div class="layui-form-item layui-inline">
+			<div class="layui-inline">
+				<label class="layui-form-label">应用ID：</label>
+				<div class="layui-input-inline">
+					<input type="text" value="" id="appId" class="layui-input search_input" />
+				</div>
+			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-label">应用名：</label>
+				<div class="layui-input-inline">
+					<input type="text" value="" id="appName" class="layui-input search_input" />
+				</div>
+			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-label">部门：</label>
+				<div class="layui-input-inline">
+					<input type="text" value="" id="departmentName" class="layui-input search_input" />
+				</div>
+			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-label">所有者：</label>
+				<div class="layui-input-inline">
+					<input type="text" value="" id="ownerName" class="layui-input search_input" />
+				</div>
+			</div>
+
+			<a class="layui-btn appSearchList_btn" lay-filter="appSearchFilter"><i
+				class="layui-icon">&#xe615;</i>查询</a>
+		</div>
+	</form>
+
+	<table class="layui-table"
+		lay-data="{height:'full', url:'/app/list/data', page:true,limit: 10, id:'appTableId'}"
+		lay-filter="appTableId">
+		<thead>
+			<tr>
+				<th lay-data="{field: 'id', align: 'center', sort: true,width:'4%'}">ID</th>
+				<th lay-data="{field: 'candAppId', align: 'center',width:'10%'}">应用ID</th>
+				<th lay-data="{field: 'appName', align: 'center',width:'10%'}">应用名</th>
+				<th lay-data="{field: 'domain', align: 'center',width:'10%'}">域名</th>
+				<th lay-data="{field: 'version', align: 'center',width:'4%'}">版本</th>
+				<th lay-data="{field: 'departmentName', align: 'center',width:'5%'}">部门</th>
+				<th lay-data="{field: 'allowCross', align: 'center',templet:'#allowCrossTpl',width:'5%'}" >跨集群</th>
+				<th lay-data="{field: 'ownerName',align: 'center',width:'10%'}">所有者</th>
+				<th lay-data="{field: 'ownerEmail',align: 'center',width:'13%'}">所有者邮箱</th>
+				<th lay-data="{field: 'memberName',align: 'center',width:'10%'}">成员</th>
+				<th lay-data="{field: 'memberEmail',align: 'center',width:'13%'}">成员邮箱</th>
+				<th lay-data="{field: 'left',align: 'center', toolbar: '#servUpdate',width:'6%'}">操作区</th>
+			</tr>
+		</thead>
+	</table>
+
+	<div id="queueEditFormDiv" style="display: none">
+
+		<form th:include="app/appEdit::editAppForm" class="layui-form"
+			id="queueDetailForm" action=""></form>
+
+	</div>
+	<script th:src="@{/js/jquery-1.11.1.min.js}"></script>
+	<script th:src="@{/layui/layui.js}"></script>
+	<script th:src="@{/js/select2.min.js}"></script>
+	<script th:src="@{/js/appList.js}"></script>
+	<script type="text/html" id="allowCrossTpl">
+		{{#  if(d.allowCross==1){ }}
+		<i class="layui-icon icon-yes">&#xe618;</i>
+		{{#  } else { }}
+		<i class="layui-icon icon-no">&#x1006;</i>
+		{{#  } }}
+	</script>
+
+
+
+	<script type="text/html" id="servUpdate">
+    <div class="layui-inline">
+		{{#  if(d.role!=2){ }}
+			<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="servUpdate">
+				更新
+			</a>
+        	<!--<a  class="layui-btn layui-btn-normal layui-btn-xs"  lay-event="edit">编辑</a>-->
+		{{#  } }}
+    </div>
+	</script>
+
+	<style type="text/css">
+	.warn1 {
+	color: red;
+	font-size: large;
+	font-weight: bold;
+	}
+
+	.select2-container--open .select2-dropdown {
+		left: 0;
+		z-index: 999999999;
+	}
+	.select2-container--default, .select2-container--focus ,.select2-selection--multiple{
+		border-color:#e6e6e6!important;
+	}
+	.icon-yes {
+		font-size: 30px;
+		color: #5FB878;
+	}
+
+	.icon-no {
+		font-size: 30px;
+		color: #e60000;
+		font-weight: 900;
+	}
+</style>
+
+</body>
+</html>

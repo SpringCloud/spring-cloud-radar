@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+
+&nbsp;
+<form class="layui-form">
+    <div class="layui-form-item layui-inline">
+        <div class="layui-inline">
+            <label class="layui-form-label">集群名：</label>
+            <div class="layui-input-inline">
+                <input type="text" value="" id="clusterName" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">应用ID：</label>
+            <div class="layui-input-inline">
+                <input type="text" value="" id="appId" class="layui-input search_input"/>
+            </div>
+        </div>
+        <a class="layui-btn appSearchList_btn" lay-filter="appSearchFilter"><i
+                class="layui-icon">&#xe615;</i>查询</a>
+    </div>
+</form>
+
+<table class="layui-table" lay-data="{height:'full', url:'/app/cluster/list/data', page:true,limit: 10, id:'appClusterTableId'}" lay-filter="appClusterTableId">
+    <thead>
+    <tr>
+        <th lay-data="{field: 'id', align: 'center', sort: true,width:'4%'}" rowspan="2">ID</th>
+        <th lay-data="{field: 'clusterName', align: 'center',width:'32%'}" rowspan="2">集群名</th>
+        <th lay-data="{field: 'candAppId', align: 'center',width:'32%'}" rowspan="2">应用ID</th>
+        <th lay-data="{field: 'appName', align: 'center',width:'32%'}" rowspan="2">应用名</th>
+        <!--<th lay-data="{field: 'blackList', align: 'center',width:'28.5%'}" rowspan="2">黑名单</th>-->
+        <!--<th lay-data="{field: 'whiteList', align: 'center',width:'28.5%'}" rowspan="2">白名单</th>-->
+    </tr>
+    </thead>
+</table>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function () {
+        var table = layui.table,
+            form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+            element = layui.element;
+
+        /**查询*/
+        $(".appSearchList_btn").click(function () {
+            table.reload('appClusterTableId', {
+                where: {//请求参数
+                    clusterName: $("#clusterName").val(),
+                    appId: $("#appId").val()
+                },
+                page: 1
+            });
+        });
+
+
+    });
+
+</script>
+</body>
+
+
+</html>

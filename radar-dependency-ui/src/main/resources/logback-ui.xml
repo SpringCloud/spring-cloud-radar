@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	<jmxConfigurator />
+
+	<!--这里可以将spring env中的配置信息引用进来，供日志配置使用。此处引入了一个server.port的配置命名为port，在stdout的appender中使用该配置${port} -->
+	<springProperty scope="context" name="port" source="server.port" />
+
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>--${port}--%date [%thread] %-5level %logger{80}- %msg---the guid is %X{guid}%n
+			</pattern>
+		</layout>
+	</appender>
+
+	<root>
+		<level value="info" />
+		<appender-ref ref="stdout"/>
+	</root>
+</configuration>

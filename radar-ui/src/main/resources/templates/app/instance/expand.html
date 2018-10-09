@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+
+<div class="layui-tab marg0" lay-filter="demo">
+    <ul class="layui-tab-title">
+        <li class="layui-this">实例</li>
+        <li>应用</li>
+        <li>集群</li>
+        <li>操作日志</li>
+    </ul>
+    <div class="layui-tab-content clildFrame">
+        <div class="layui-tab-item layui-show">
+            <iframe th:src="@{'/app/instance/detail?instanceId='+${instanceId}}"></iframe>
+        </div>
+        <div class="layui-tab-item">
+            <iframe th:src="@{'/app/detail?instanceId='+${instanceId}}"></iframe>
+        </div>
+        <div class="layui-tab-item">
+            <iframe th:src="@{'/app/cluster/detail?instanceId='+${instanceId}}"></iframe>
+        </div>
+        <div class="layui-tab-item">
+            <iframe th:src="@{'/app/log/detail?instanceId='+${instanceId}}"></iframe>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //一些事件监听
+//        element.on('tab(demo)', function(data){
+//            console.log(data);
+//        });
+    });
+</script>
+</html>

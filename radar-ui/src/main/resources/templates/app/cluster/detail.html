@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+<table class="layui-table" lay-data="{height:'full', page:true,limit: 10, id:'appClusterTableId'}" lay-filter="appClusterTableId">
+    <thead>
+    <tr>
+        <th lay-data="{field: 'id', align: 'center', sort: true, width:70}" rowspan="2">ID</th>
+        <th lay-data="{field: 'candAppId', align: 'center', width:200}" rowspan="2">应用ID</th>
+        <th lay-data="{field: 'appName', align: 'center', width:300}" rowspan="2">应用名</th>
+        <th lay-data="{field: 'clusterName',align: 'center', width:300}" rowspan="2">集群名</th>
+        <!--<th lay-data="{field: 'blackList',align: 'center', width:450}" rowspan="2">黑名单</th>-->
+        <!--<th lay-data="{field: 'whiteList', align: 'center', width:450}" rowspan="2">白名单</th>-->
+        <!--<th lay-data="{field: 'limitQps', align: 'center', width:165}" rowspan="2">是否限流</th>-->
+        <!--<th lay-data="{field: 'gatewayVisual',align: 'center', width:165}" rowspan="2">网关可见</th>-->
+        <!--<th lay-data="{field: 'enableSelf',align: 'center', width:165}" rowspan="2">是否自保护</th>-->
+    </tr>
+    </thead>
+</table>
+<input type="hidden" id="instanceId" th:value="${instanceId}"/>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function () {
+        var table = layui.table,
+            form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+            element = layui.element;
+
+        var instanceId=$("#instanceId").val();
+        //第三种渲染方式：转换静态表格方式
+        var tableOptions = {
+            url:'/app/cluster/detail/data?instanceId='+instanceId //请求地址
+        };
+        //表格初始化
+        table.init('appClusterTableId', tableOptions);
+
+
+    });
+
+</script>
+
+
+</body>
+</html>

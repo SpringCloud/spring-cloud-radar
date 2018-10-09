@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+
+&nbsp;
+<form class="layui-form">
+    <div class="layui-form-item layui-inline">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-inline">
+                <select name="statusSelect" lay-filter="statusSelect">
+                    <option value="0">离线</option>
+                    <option value="1">在线</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="layui-inline">
+            <label class="layui-form-label">appId：</label>
+            <div class="layui-input-inline">
+                <input type="text" value="" id="appId" class="layui-input search_input"/>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <a class="layui-btn servSearchList_btn" lay-filter="servSearchFilter"><i
+                    class="layui-icon">&#xe615;</i>查询</a>
+        </div>
+    </div>
+</form>
+
+<div id="cacheData">
+</div>
+
+
+<script th:src="@{/layui/layui.js}"></script>
+
+<script th:src="@{/js/instanceList.js}"></script>
+
+<script th:src="@{/js/jquery-1.11.1.min.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function(){
+        var table = layui.table,
+            form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.$,
+            element = layui.element;
+        //定义一个参数来记录select选中项的value
+        var optionVal = 0;
+
+        //监听select选项
+        form.on('select(statusSelect)', function (data) {
+            optionVal = data.value
+        });
+
+        /**查询*/
+        $(".servSearchList_btn").click(function () {
+            $.ajax({
+                url: '/app/cachelist/getData',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                data:{
+                    flag: optionVal,
+                    appId: $("#appId").val()
+                },
+                success: function (data) {
+                    $("#cacheData").html(JSON.stringify(data));
+                },
+                error: function (data) {
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

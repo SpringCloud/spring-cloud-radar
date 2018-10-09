@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.UiAppClusterRepository">
+    <resultMap id="BaseResultMap" type="com.ppdai.infrastructure.radar.biz.entity.AppClusterEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="app_id" property="appId" jdbcType="BIGINT"/>
+        <result column="cand_app_id" property="candAppId" jdbcType="VARCHAR"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="cluster_name" property="clusterName" jdbcType="VARCHAR"/>
+        <result column="black_list" property="blackList" jdbcType="VARCHAR"/>
+        <result column="white_list" property="whiteList" jdbcType="VARCHAR"/>
+        <result column="limit_qps" property="limitQps" jdbcType="INTEGER"/>
+        <result column="gateway_visual" property="gatewayVisual" jdbcType="VARCHAR"/>
+        <result column="enable_self" property="enableSelf" jdbcType="INTEGER"/>
+        <result column="insert_by" property="insertBy" jdbcType="VARCHAR"/>
+        <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, app_id, cand_app_id, app_name, cluster_name, black_list, white_list, limit_qps, 
+    gateway_visual, enable_self, insert_by, insert_time, update_by, update_time, is_active
+  </sql>
+
+    <select id="appClusterCount" parameterType="java.lang.String" resultType="long">
+        select count(*) from instance ins,app_cluster ac
+        where
+        ins.app_cluster_id=ac.id
+        <if test="instanceId != null and instanceId !=''">
+            and ins.id = #{instanceId}
+        </if>
+    </select>
+
+    <select id="findByInstanceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from app_cluster ac,instance ins
+        where
+        ins.app_cluster_id=ac.id
+        <if test="instanceId != null and instanceId !=''">
+            and ins.id = #{instanceId}
+        </if>
+    </select>
+
+    <select id="countByAppIdOrClusterName" parameterType="Map" resultType="long">
+        select count(*)
+        from app_cluster
+        where
+        1=1
+        <if test="clusterName != null and clusterName !=''">
+            and cluster_name like concat(concat('%',#{clusterName}),'%')
+        </if>
+        <if test="appId != null and appId !=''">
+            and cand_app_id like concat(concat('%',#{appId}),'%')
+        </if>
+    </select>
+
+    <select id="findByAppIdOrClusterName" parameterType="Map" resultMap="BaseResultMap">
+        select *
+        from app_cluster
+        <where>
+            1=1
+            <if test="clusterName != null and clusterName !=''">
+                and cluster_name like concat(concat('%',#{clusterName}),'%')
+            </if>
+            <if test="appId != null and appId !=''">
+                and cand_app_id like concat(concat('%',#{appId}),'%')
+            </if>
+        </where>
+        <if test="pageIndex !=null and pageSize !=''" >
+            limit #{pageIndex},#{pageSize}
+        </if>
+
+    </select>
+
+</mapper>

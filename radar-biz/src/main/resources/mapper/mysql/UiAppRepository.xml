@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.UiAppRepository">
+    <resultMap id="BaseResultMap" type="com.ppdai.infrastructure.radar.biz.entity.AppEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="cand_app_id" property="candAppId" jdbcType="VARCHAR"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR"/>
+        <result column="department_name" property="departmentName" jdbcType="VARCHAR"/>
+        <result column="owner_name" property="ownerName" jdbcType="VARCHAR"/>
+        <result column="owner_id" property="ownerId" jdbcType="VARCHAR"/>
+        <result column="owner_email" property="ownerEmail" jdbcType="VARCHAR"/>
+        <result column="member_id" property="memberId" jdbcType="VARCHAR"/>
+        <result column="member_name" property="memberName" jdbcType="VARCHAR"/>
+        <result column="member_email" property="memberEmail" jdbcType="VARCHAR"/>
+        <result column="domain" property="domain" jdbcType="VARCHAR"/>
+        <result column="allow_cross" property="allowCross" jdbcType="INTEGER"/>
+        <result column="insert_by" property="insertBy" jdbcType="VARCHAR"/>
+        <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, cand_app_id, app_name, department_id, department_name, owner_name, owner_id, 
+    owner_email, member_id, member_name, member_email,domain,allow_cross, insert_by, insert_time,
+    update_by, update_time, is_active
+  </sql>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app
+    </select>
+
+    <select id="getMaxUpdateDate" resultType="java.util.Date"
+            useCache="false">
+    select max(update_time) from app
+  </select>
+
+    <select id="getUpdateData" resultMap="BaseResultMap" useCache="false">
+    select id, cand_app_id from app where update_time>#{updateTime}
+  </select>
+
+    <select id="appCount" parameterType="java.lang.String" resultType="long">
+        select count(*) from instance ins,app a
+        where
+        ins.app_id=a.id
+        <if test="instanceId != null and instanceId !=''">
+            and ins.id = #{instanceId}
+        </if>
+    </select>
+
+    <select id="findByInstanceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from app a,instance ins
+        where
+        ins.app_id=a.id
+        <if test="instanceId != null and instanceId !=''">
+            and ins.id = #{instanceId}
+        </if>
+    </select>
+
+
+    <select id="countByAppName" parameterType="java.lang.String" resultType="long">
+        select count(*)
+        from app
+        where
+        1=1
+        <if test="appName != null and appName !=''">
+            and app_name like concat(concat('%',#{appName}),'%')
+        </if>
+        <if test="appId != null and appId !=''">
+            and cand_app_id like concat(concat('%',#{appId}),'%')
+        </if>
+        <if test="departmentName != null and departmentName !=''">
+            and department_name like concat(concat('%',#{departmentName}),'%')
+        </if>
+        <if test="ownerName != null and ownerName !=''">
+            and owner_name like concat(concat('%',#{ownerName}),'%')
+        </if>
+    </select>
+
+    <select id="findByAppName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from app
+        <where>
+            1=1
+            <if test="appName != null and appName !=''">
+                and app_name like concat(concat('%',#{appName}),'%')
+            </if>
+            <if test="appId != null and appId !=''">
+                and cand_app_id like concat(concat('%',#{appId}),'%')
+            </if>
+            <if test="departmentName != null and departmentName !=''">
+                and department_name like concat(concat('%',#{departmentName}),'%')
+            </if>
+            <if test="ownerName != null and ownerName !=''">
+                and owner_name like concat(concat('%',#{ownerName}),'%')
+            </if>
+        </where>
+        <if test="pageIndex !=null and pageSize !=''" >
+            limit #{pageIndex},#{pageSize}
+        </if>
+
+    </select>
+
+    <update id="update" parameterType="com.ppdai.infrastructure.radar.biz.entity.AppEntity">
+        update app
+        <set>
+            <if test="candAppId != null">
+                cand_app_id = #{candAppId,jdbcType=VARCHAR},
+            </if>
+            <if test="appName != null">
+                app_name = #{appName,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentName != null">
+                department_name = #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerName != null">
+                owner_name = #{ownerName,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerId != null">
+                owner_id = #{ownerId,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerEmail != null">
+                owner_email = #{ownerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=VARCHAR},
+            </if>
+            <if test="memberName != null">
+                member_name = #{memberName,jdbcType=VARCHAR},
+            </if>
+            <if test="memberEmail != null">
+                member_email = #{memberEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="allowCross != null">
+                allow_cross = #{allowCross,jdbcType=INTEGER},
+            </if>
+            <if test="domain != null">
+                domain = #{domain,jdbcType=VARCHAR},
+            </if>
+            <if test="insertBy != null">
+                insert_by = #{insertBy,jdbcType=VARCHAR},
+            </if>
+            <if test="insertTime != null">
+                insert_time = #{insertTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

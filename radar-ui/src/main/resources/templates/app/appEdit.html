@@ -1,0 +1,63 @@
+<form th:fragment="editAppForm" xmlns:th="http://www.thymeleaf.org" name="editAppForm" class="layui-form">
+    <input type="hidden" name="id" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">应用ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="candAppId"  lay-verify="required"  autocomplete="off" class="layui-input" disabled="disabled"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">应用名</label>
+        <div class="layui-input-block">
+            <input type="text" name="appName"  lay-verify="required"  autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">域名</label>
+        <div class="layui-input-block">
+            <input type="text" name="domain"  autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门</label>
+        <div class="layui-input-block">
+            <select type="text" lay-ignore  class="layui-input" id="departmentId" style="width:100%; border-color:#e6e6e6!important">
+            </select>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">跨集群</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="allowCross" lay-skin="switch" id="allowCross" lay-text="on|off" value="1" lay-filter="allow">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所有者</label>
+        <div class="layui-input-block">
+            <select type="text" lay-ignore  class="layui-input" id="ownerId" style="width:100%; border-color:#e6e6e6!important" multiple="multiple">
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">成员</label>
+        <div class="layui-input-block">
+            <select type="text" lay-ignore  class="layui-input" id="memberId" style="width:100%; border-color:#e6e6e6!important" multiple="multiple">
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="button" lay-submit="true" lay-filter="updateSubmit" id="updateSubmit">提交</button>
+        </div>
+    </div>
+</form>

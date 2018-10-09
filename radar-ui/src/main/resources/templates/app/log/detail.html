@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+<table class="layui-table" lay-data="{height:'full', page:true,limit: 10, id:'auditLogTableId',initSort:{field:'insertTime', type:'desc'}}" lay-filter="auditLogTableId">
+    <thead>
+    <tr>
+        <th lay-data="{field: 'id', align: 'center', sort: true, width:70}" rowspan="2">ID</th>
+        <th lay-data="{field: 'insertBy',align: 'center', width:300}" rowspan="2">操作人</th>
+        <th lay-data="{field: 'content', align: 'center', width:700}" rowspan="2">修改内容</th>
+        <th lay-data="{field: 'insertTime',align: 'center',sort: true, width:400}" rowspan="2">修改时间</th>
+    </tr>
+    </thead>
+</table>
+<input type="hidden" id="instanceId" th:value="${instanceId}"/>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function () {
+        var table = layui.table,
+            form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+            element = layui.element;
+
+        var instanceId=$("#instanceId").val();
+        //第三种渲染方式：转换静态表格方式
+        var tableOptions = {
+            url:'/app/log/detail/data?instanceId='+instanceId //请求地址
+        };
+        //表格初始化
+        table.init('auditLogTableId', tableOptions);
+
+    });
+
+</script>
+
+
+</body>
+</html>

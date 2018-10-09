@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ppdai.infrastructure.radar.biz.dal.AppClusterRepository">
+	<resultMap id="BaseResultMap"
+		type="com.ppdai.infrastructure.radar.biz.entity.AppClusterEntity">
+		  <result column="id" property="id"/>
+	      <result column="app_id" property="appId"/>
+	      <result column="cand_app_id" property="candAppId"/>
+	      <result column="app_name" property="appName"/>
+	      <result column="cluster_name" property="clusterName"/>
+	      <result column="black_list" property="blackList"/>
+	      <result column="white_list" property="whiteList"/>
+	      <result column="limit_qps" property="limitQps"/>
+	      <result column="gateway_visual" property="gatewayVisual"/>
+	      <result column="enable_self" property="enableSelf"/>
+	      <result column="insert_by" property="insertBy"/>
+	      <result column="insert_time" property="insertTime"/>
+	      <result column="update_by" property="updateBy"/>
+	      <result column="update_time" property="updateTime"/>
+	      <result column="is_active" property="isActive"/>
+	</resultMap>
+
+	
+	<select id="findAll"  resultMap="BaseResultMap" useCache="false">
+		select * from app_cluster
+	</select>	
+	
+	<insert id="insert"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.AppClusterEntity" useGeneratedKeys="true" keyProperty="id">	
+		INSERT INTO app_cluster(app_id,cand_app_id,app_name,cluster_name)VALUES(#{appId},#{candAppId},#{appName},#{clusterName})
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List"
+		 keyProperty="id">
+		
+	</insert>
+	<select id="getClusterCount" resultType="java.lang.Long" useCache="false">
+		SELECT count(distinct cluster_name) FROM app_cluster
+	</select>
+	<select id="findByUq"  resultMap="BaseResultMap" >
+		select  *  from app_cluster where cand_app_id = #{candAppId} and cluster_name=#{clusterName}
+	</select>
+	<select id="getMaxUpdateDate" resultType="java.util.Date" useCache="false">
+		select max(update_time) from app_cluster
+	</select>
+	<select id="getUpdateData" resultMap="BaseResultMap" useCache="false">
+		select id,app_id,cand_app_id,app_name,cluster_name  from app_cluster where update_time>#{updateTime}
+	</select>
+
+	<select id="findByCandAppId" resultMap="BaseResultMap" useCache="false">
+		select  *  from app_cluster where cand_app_id = #{candAppId}
+	</select>
+
+	<update id="updateAppName">
+		update app_cluster set app_name = #{appName} where id = #{id}
+	</update>
+
+</mapper>
+

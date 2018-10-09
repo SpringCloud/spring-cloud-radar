@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.UiAuditLogRepository">
+    <resultMap id="BaseResultMap" type="com.ppdai.infrastructure.radar.biz.entity.AuditLogEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="tb_name" property="tbName" jdbcType="VARCHAR"/>
+        <result column="ref_id" property="refId" jdbcType="BIGINT"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="insert_by" property="insertBy" jdbcType="VARCHAR"/>
+        <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, tb_name, ref_id, content, insert_by, insert_time, update_by, update_time, is_active
+  </sql>
+
+    <select id="auditLogCount" parameterType="java.lang.String" resultType="long">
+    select count(*) from audit_log
+    where ref_id=#{instanceId}
+  </select>
+
+    <select id="findByInstanceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from audit_log
+        <where>
+            ref_id=#{instanceId}
+        </where>
+        <if test="pageIndex !=null and pageSize !=''">
+            limit #{pageIndex},#{pageSize}
+        </if>
+    </select>
+
+    <insert id="insertLog" parameterType="Map">
+        insert into audit_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tbName != null">
+                tb_name,
+            </if>
+            <if test="refId != null">
+                ref_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="insertBy != null">
+                insert_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tbName != null">
+                #{tbName,jdbcType=VARCHAR},
+            </if>
+            <if test="refId != null">
+                #{refId,jdbcType=BIGINT},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="insertBy != null">
+                #{insertBy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

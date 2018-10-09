@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.UiInstanceRepository">
+    <resultMap id="BaseResultMap" type="com.ppdai.infrastructure.radar.biz.dto.ui.CombinedInstanceDto">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="app_id" property="appId" jdbcType="BIGINT"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="cand_app_id" property="candAppId" jdbcType="VARCHAR"/>
+        <result column="app_cluster_id" property="appClusterId" jdbcType="BIGINT"/>
+        <result column="app_cluster_name" property="appClusterName" jdbcType="VARCHAR"/>
+        <result column="cand_instance_id" property="candInstanceId" jdbcType="VARCHAR"/>
+        <result column="ip" property="ip" jdbcType="VARCHAR"/>
+        <result column="port" property="port" jdbcType="INTEGER"/>
+        <result column="lan" property="lan" jdbcType="VARCHAR"/>
+        <result column="sdk_version" property="sdkVersion" jdbcType="VARCHAR"/>
+        <result column="pub_status" property="pubStatus" jdbcType="INTEGER"/>
+        <result column="instance_status" property="instanceStatus" jdbcType="INTEGER"/>
+        <result column="supper_status" property="supperStatus" jdbcType="INTEGER"/>
+        <result column="extend_status1" property="extendStatus1" jdbcType="INTEGER"/>
+        <result column="extend_status2" property="extendStatus2" jdbcType="INTEGER"/>
+        <result column="heart_time" property="heartTime" jdbcType="TIMESTAMP"/>
+        <result column="heart_status" property="heartStatus" jdbcType="TINYINT"/>
+        <result column="weight" property="weight" jdbcType="INTEGER"/>
+        <result column="insert_by" property="insertBy" jdbcType="VARCHAR"/>
+        <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+        <result column="serv_name" property="servName" jdbcType="LONGVARCHAR"/>
+        <result column="owner_name" property="ownerName" jdbcType="VARCHAR"/>
+        <result column="department_name" property="departmentName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, app_id, app_name, cand_app_id, app_cluster_id, app_cluster_name, cand_instance_id, 
+    ip, port, lan, sdk_version, pub_status, instance_status, supper_status, extend_status1, 
+    extend_status2, heart_time, heart_status, weight, insert_by, insert_time, update_by, 
+    update_time, is_active
+  </sql>
+
+    <select id="countBy" parameterType="Map" resultType="long">
+        select count(*) from instance ins, app a
+        where
+        ins.app_id=a.id
+        <if test="statusSelect == 1 ">
+            and (ins.supper_status=1
+            or(ins.supper_status=0 and ins.heart_status=1 and ins.pub_status=1 and ins.instance_status=1 ))
+        </if>
+        <if test="statusSelect == 2 ">
+            and (ins.supper_status=-1
+            or(ins.supper_status=0 and (ins.heart_status=0 or ins.pub_status=0 or ins.instance_status=0)))
+        </if>
+        <if test="heartStatus == 1 ">
+            and ins.heart_status=1
+        </if>
+        <if test="heartStatus == 2 ">
+            and ins.heart_status=0
+        </if>
+        <if test="ID != null and ID !=''">
+            and ins.id = #{ID}
+        </if>
+        <if test="clusterName != null and clusterName !=''">
+            and ins.app_cluster_name = #{clusterName}
+        </if>
+        <if test="appId != null and appId !=''">
+            and ins.cand_app_id = #{appId}
+        </if>
+        <if test="departmentName != null and departmentName !=''">
+            and a.department_name = #{departmentName}
+        </if>
+        <if test="appName != null and appName !=''">
+            and a.app_name = #{appName}
+        </if>
+        <if test="ip != null and ip !=''">
+            and ins.ip = #{ip}
+        </if>
+        <if test="sdkVersion != null and sdkVersion !=''">
+            and ins.sdk_version = #{sdkVersion}
+        </if>
+        <if test="expiredTime != null and expiredTime !=''">
+            and ins.heart_time >= #{lastNoActiveTime}
+        </if>
+        <if test="lastNoActiveTime != null and lastNoActiveTime !=''">
+            and ins.heart_status=0
+        </if>
+
+    </select>
+
+    <select id="findBy" parameterType="Map" resultMap="BaseResultMap">
+        select ins.*, a.owner_name,a.owner_id,a.member_name,a.member_id,a.department_name
+        from instance ins,app a
+        <where>
+            ins.app_id=a.id
+            <if test="statusSelect == 1 ">
+                and (ins.supper_status=1
+                or(ins.supper_status=0 and ins.heart_status=1 and ins.pub_status=1 and ins.instance_status=1 ))
+            </if>
+            <if test="statusSelect == 2 ">
+                and (ins.supper_status=-1
+                or(ins.supper_status=0 and (ins.heart_status=0 or ins.pub_status=0 or ins.instance_status=0)))
+            </if>
+            <if test="heartStatus == 1 ">
+                and ins.heart_status=1
+            </if>
+            <if test="heartStatus == 2 ">
+                and ins.heart_status=0
+            </if>
+            <if test="ID != null and ID !=''">
+                and ins.id = #{ID}
+            </if>
+            <if test="clusterName != null and clusterName !=''">
+                and ins.app_cluster_name = #{clusterName}
+            </if>
+            <if test="appId != null and appId !=''">
+                and ins.cand_app_id = #{appId}
+            </if>
+            <if test="departmentName != null and departmentName !=''">
+                and a.department_name = #{departmentName}
+            </if>
+            <if test="appName != null and appName !=''">
+                and a.app_name = #{appName}
+            </if>
+            <if test="ip != null and ip !=''">
+                and ins.ip = #{ip}
+            </if>
+            <if test="sdkVersion != null and sdkVersion !=''">
+                and ins.sdk_version = #{sdkVersion}
+            </if>
+            <if test="expiredTime != null and expiredTime !=''">
+                and ins.heart_time >= #{lastNoActiveTime}
+            </if>
+            <if test="lastNoActiveTime != null and lastNoActiveTime !=''">
+                and ins.heart_status=0
+            </if>
+        </where>
+
+        <if test="pageIndex !=null and pageSize !=''">
+            limit #{pageIndex},#{pageSize}
+        </if>
+
+    </select>
+
+
+
+    <select id="instanceCount" parameterType="Map" resultType="long">
+    select count(*) from instance ins, app a
+    where
+    ins.app_id=a.id
+    and
+    ins.id=#{instanceId}
+  </select>
+
+    <select id="findByInstanceId" parameterType="Map" resultMap="BaseResultMap">
+    select ins.*, a.owner_name,a.owner_id,a.member_name,a.member_id,a.department_name
+    from instance ins,app a
+    where
+    ins.app_id=a.id
+    and
+    ins.id=#{instanceId}
+  </select>
+    <select id="findOwnerAndMemberById" parameterType="java.lang.Long" resultType="com.ppdai.infrastructure.radar.biz.entity.AppEntity">
+        select a.*
+        from instance ins,app a
+        where
+        ins.app_id=a.id
+        and
+        ins.id=#{instanceId}
+    </select>
+
+    <select id="getAllSdkVersion" resultType="string">
+        select sdk_version from instance
+    </select>
+
+    <update id="updatePubStatus">
+    update instance
+    set pub_status = #{pubStatus,jdbcType=VARCHAR}
+    where id = #{insId,jdbcType=BIGINT}
+  </update>
+
+    <update id="updateSupperStatus">
+    update instance
+    set supper_status = #{supperStatus,jdbcType=VARCHAR}
+    where id = #{insId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

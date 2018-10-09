@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+
+<table class="layui-table" lay-data="{height:'full', url:'/app/lock/data', page:true,limit: 10, id:'appLockTableId'}" lay-filter="appLockTableId">
+    <thead>
+    <tr>
+        <th lay-data="{field: 'id', align: 'center', sort: true,width:'4%'}" rowspan="2">id</th>
+        <th lay-data="{field: 'ip', align: 'center',width:'11%'}" rowspan="2">ip</th>
+        <th lay-data="{field: 'key1', align: 'center',width:'10%'}" rowspan="2">key1</th>
+        <th lay-data="{field: 'heartTime', align: 'center',width:'15%'}" rowspan="2">心跳时间</th>
+        <th lay-data="{field: 'insertTime', align: 'center',width:'15%'}" rowspan="2">插入时间</th>
+        <th lay-data="{field: 'insertBy', align: 'center',width:'15%'}" rowspan="2">操作人</th>
+        <th lay-data="{field: 'updateTime', align: 'center',width:'15%'}" rowspan="2">更新时间</th>
+        <th lay-data="{field: 'updateBy', align: 'center',width:'15%'}" rowspan="2">修改者</th>
+    </tr>
+    </thead>
+</table>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function () {
+        var table = layui.table,
+            form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+            element = layui.element;
+
+    });
+
+</script>
+</body>
+
+
+</html>

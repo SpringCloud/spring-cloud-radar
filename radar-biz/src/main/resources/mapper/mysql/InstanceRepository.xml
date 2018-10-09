@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.InstanceRepository">
+	<resultMap id="BaseResultMap"
+		type="com.ppdai.infrastructure.radar.biz.entity.InstanceEntity">
+		<result column="id" property="id" />
+		<result column="app_id" property="appId" />
+		<result column="app_name" property="appName" />
+		<result column="cand_app_id" property="candAppId" />
+		<result column="app_cluster_id" property="appClusterId" />
+		<result column="app_cluster_name" property="appClusterName" />
+		<result column="cand_instance_id" property="candInstanceId" />
+		<result column="ip" property="ip" />
+		<result column="port" property="port" />
+		<result column="lan" property="lan" />
+		<result column="sdk_version" property="sdkVersion" />
+		<result column="pub_status" property="pubStatus" />
+		<result column="instance_status" property="instanceStatus" />
+		<result column="supper_status" property="supperStatus" />
+		<result column="extend_status1" property="extendStatus1" />
+		<result column="extend_status2" property="extendStatus2" />
+		<result column="heart_time" property="heartTime" />
+		<result column="heart_status" property="heartStatus" />
+		<result column="weight" property="weight" />
+		<result column="serv_name" property="servName" />
+		<result column="tag" property="tag" />
+		<result column="tag1" property="tag1" />
+		<result column="insert_by" property="insertBy" />
+		<result column="insert_time" property="insertTime" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_time" property="updateTime" />
+		<result column="is_active" property="isActive" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,app_id,app_name,cand_app_id,app_cluster_id,app_cluster_name
+		,cand_instance_id,ip,port,lan,sdk_version,pub_status,instance_status,supper_status,extend_status1,extend_status2
+		,heart_time,heart_status,weight,serv_name,tag,tag1,insert_by,insert_time,update_by,update_time,is_active
+	</sql>
+	<select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap"
+		useCache="false">
+		select *
+		from instance
+		where id = #{id}
+	</select>
+	<update id="heartBeat" parameterType="java.lang.Long">
+		update instance set
+		heart_time=now() where id=#{id}
+	</update>
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from instance
+		where
+		id = #{id}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.InstanceEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO instance ( app_id
+		,app_name ,cand_app_id ,app_cluster_id
+		,app_cluster_name
+		,cand_instance_id ,ip ,port ,lan ,sdk_version
+		,pub_status
+		,instance_status ,supper_status ,extend_status1
+		,extend_status2
+		,heart_time ,heart_status ,weight ,serv_name ,tag
+		,tag1)
+		VALUES(#{appId} ,#{appName} ,#{candAppId} ,#{appClusterId}
+		,#{appClusterName}
+		,#{candInstanceId} ,#{ip} ,#{port} ,#{lan}
+		,#{sdkVersion}
+		,#{pubStatus} ,#{instanceStatus} ,#{supperStatus}
+		,#{extendStatus1} ,#{extendStatus2} ,now() ,#{heartStatus}
+		,#{weight}
+		,#{servName} ,#{tag} ,#{tag1})
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO instance ( app_id
+		,app_name ,cand_app_id ,app_cluster_id
+		,app_cluster_name
+		,cand_instance_id ,ip ,port ,lan ,sdk_version
+		,pub_status
+		,instance_status ,supper_status ,extend_status1
+		,extend_status2
+		,heart_time ,heart_status ,weight ,serv_name ,tag
+		,tag1)
+		VALUES
+		<foreach collection="instanceLst" item="item" index="index"
+			separator=",">
+			(#{item.appId} ,#{item.appName} ,#{item.candAppId}
+			,#{item.appClusterId}
+			,#{item.appClusterName}
+			,#{item.candInstanceId} ,#{item.ip} ,#{item.port} ,#{item.lan}
+			,#{item.sdkVersion}
+			,#{item.pubStatus} ,#{item.instanceStatus} ,#{item.supperStatus}
+			,#{item.extendStatus1} ,#{item.extendStatus2} ,now() ,#{item.heartStatus}
+			,#{item.weight}
+			,#{item.servName} ,#{item.tag} ,#{item.tag1})
+		</foreach>
+
+	</insert>
+	<update id="update"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.InstanceEntity">
+		UPDATE instance set
+		app_id = #{appId},
+		app_name =
+		#{appName},
+		cand_app_id = #{candAppId},
+		app_cluster_id =
+		#{appClusterId},
+		app_cluster_name = #{appClusterName},
+		cand_instance_id
+		= #{candInstanceId},
+		ip = #{ip},
+		port = #{port},
+		lan = #{lan},
+		sdk_version = #{sdkVersion},
+		pub_status = #{pubStatus},
+		instance_status
+		= #{instanceStatus},
+		supper_status = #{supperStatus},
+		extend_status1 =
+		#{extendStatus1},
+		extend_status2 = #{extendStatus2},
+		heart_time = now(),
+		heart_status = #{heartStatus},
+		weight = #{weight},
+		serv_name =
+		#{servName},
+		tag = #{tag},
+		tag1 = #{tag1}
+		WHERE id = #{id}
+	</update>
+	<select id="findByCandInstanceId" resultMap="BaseResultMap"
+		useCache="false">
+		SELECT *
+		FROM instance WHERE
+		cand_instance_id=#{candInstanceId}
+	</select>
+	<select id="findByCandInstanceIds" parameterType="java.util.List"
+		resultMap="BaseResultMap" useCache="false">
+		select * from
+		instance
+		where cand_instance_id in (
+		<foreach item="guard" index="index" collection="candInstanceIds"
+			separator=","> #{guard} </foreach>
+		)
+	</select>
+	<select id="findByIds" parameterType="java.util.List" resultMap="BaseResultMap"
+		useCache="false">
+		select * from instance
+		where id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</select>
+	<select id="findAll" resultMap="BaseResultMap" useCache="false">
+		select *
+		from instance
+	</select>
+
+	<delete id="deleteByIds" parameterType="java.util.List">
+		delete from instance
+		where
+		id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</delete>
+	<select id="findExpired" resultMap="BaseResultMap" useCache="false">
+		  <![CDATA[ 
+		select * from instance where heart_time < TIMESTAMPADD(second, -#{heartTimeInterval}, current_timestamp ) and heart_status=1
+		  ]]>
+	</select>
+	<select id="findOld" resultMap="BaseResultMap" useCache="false">
+		  <![CDATA[ 
+			select * from instance where heart_time < TIMESTAMPADD(second, -#{heartTimeInterval}, current_timestamp )  and supper_status=0
+		  ]]>
+	</select>
+	<select id="findNoraml" resultMap="BaseResultMap" useCache="false">
+		select * from instance where heart_time > TIMESTAMPADD(second,
+		-#{heartTimeInterval}, current_timestamp ) and heart_status=0
+	</select>
+
+	<update id="updateHeartStatusUp">
+		update instance set heart_status = 1 where
+		id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		) and heart_time > TIMESTAMPADD(second, -#{expireTime},
+		current_timestamp )
+	</update>
+	<update id="updateHeartStatusDown">
+		update instance set heart_status = 0 where
+		id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		) and heart_time &lt; TIMESTAMPADD(second, -#{expireTime},
+		current_timestamp )
+
+	</update>
+	<update id="updatePubStatus">
+		update instance set pub_status = #{status} where id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</update>
+	<update id="updateInstanceStatus">
+		update instance set instance_status = #{status} where id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</update>
+	<update id="updateHeartStatusDownFoce">
+		update instance set heart_status = 0,heart_time = TIMESTAMPADD(second,
+		-#{expireTime}, current_timestamp ) where
+		id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</update>
+	<update id="updateSupperStatus">
+		update instance set supper_status = #{status} where id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</update>
+	<select id="getCount" resultType="java.lang.Long" useCache="false">
+		select count(1) from instance
+	</select>
+	<select id="findByCandAppId" resultType="com.ppdai.infrastructure.radar.biz.entity.InstanceEntity">
+		select * from instance where cand_app_id=#{candAppId}
+	</select>
+
+	<update id="heartBeatBatch" parameterType="java.util.List">
+		update instance set
+		heart_time=now() where
+		id in (
+		<foreach item="guard" index="index" collection="ids"
+			separator=","> #{guard} </foreach>
+		)
+	</update>
+
+	<update id="updateAppName">
+		update instance set app_name = #{appName} where id = #{id}
+	</update>
+</mapper>

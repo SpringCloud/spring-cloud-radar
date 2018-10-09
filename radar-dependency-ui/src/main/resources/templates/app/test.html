@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+<form class="layui-form" style="margin-top: 20px;">
+    <div class="layui-form-item layui-inline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="layui-btn layui-btn-primary servSearchList_btn" lay-filter="servSearchFilter">测试</a>
+        <text id="cacheData" class="warn1"></text>
+    </div>
+</form>
+<h1 class="legend1" style="margin-top: 10px;">点击测试按钮，则触发radar-rest的自检接口，该接口的url为:
+    <text id="radarRestUrl" class="warn1" th:text="${radarRestUrl}"></text></h1>   
+
+
+<script th:src="@{/layui/layui.js}"></script>
+
+<script th:src="@{/js/instanceList.js}"></script>
+
+<script th:src="@{/js/jquery-1.11.1.min.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function () {
+        var table = layui.table,
+            form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.$,
+            element = layui.element;
+
+
+        /**查询*/
+        $(".servSearchList_btn").click(function () {
+            $("#cacheData").html("测试中，请稍等！");
+                $.ajax({
+                    url: '/app/test/getData',
+                    type: 'GET',
+                    async: true,
+                    success: function (data) {
+                        $("#cacheData").html(data);
+                    },
+                    error: function (data) {
+                    }
+                });
+        });
+        
+    });
+</script>
+
+<style type="text/css">
+    .warn1 {
+        color: red;
+        font-size: large;
+        font-weight: bold;
+    }
+    .legend1{
+        margin-left: 20px;
+        padding: 0 10px;
+        font-size: 20px;
+        font-weight: 300;
+    }
+
+</style>
+
+</body>
+</html>

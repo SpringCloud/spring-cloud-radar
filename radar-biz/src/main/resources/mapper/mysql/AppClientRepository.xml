@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdai.infrastructure.radar.biz.dal.AppClientRepository">
+	<resultMap id="BaseResultMap"
+		type="com.ppdai.infrastructure.radar.biz.entity.AppClientEntity">
+	      <result column="id" property="id"/>
+	      <result column="provider_cand_app_id" property="providerCandAppId"/>
+	      <result column="consumer_cand_app_id" property="consumerCandAppId"/>
+	      <result column="consumer_cluster_name" property="consumerClusterName"/>
+	      <result column="insert_by" property="insertBy"/>
+	      <result column="insert_time" property="insertTime"/>
+	      <result column="update_by" property="updateBy"/>
+	      <result column="update_time" property="updateTime"/>
+	      <result column="is_active" property="isActive"/>
+	</resultMap>	
+
+	<insert id="insert"
+		parameterType="com.ppdai.infrastructure.radar.biz.entity.AppClientEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into serv_client (provider_serv_name, consumer_app_id,
+		consumer_cluster_name
+		)
+		values (#{providerServName},
+		#{consumerAppId},
+		#{consumerClusterName}
+		)
+	</insert>	
+	<select id="findByConsumerCandAppId"  resultMap="BaseResultMap">
+	   select * from app_client where consumer_cand_app_id = #{consumerCandAppId} 
+	</select>	
+</mapper>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <header th:include="common/header::header" th:remove="tag"></header>
+</head>
+<body>
+<h1 class="legend1" style="margin-top: 10px;">心跳健康检查的url为:
+    <text id="checkUrl"  th:text="${checkUrl}"></text></h1>
+
+<text id="checkResult" class="warn1 legend1" th:text="${checkResult}"></text>
+
+
+
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'table', 'jquery', 'layer', 'form'], function () {
+        var table = layui.table,
+            form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+            element = layui.element;
+
+    });
+
+</script>
+
+<style type="text/css">
+    .warn1 {
+        color: red;
+        font-size: large;
+        font-weight: bold;
+    }
+    .legend1{
+        margin-left: 20px;
+        padding: 0 10px;
+        font-size: 20px;
+        font-weight: 300;
+    }
+
+</style>
+</body>
+
+
+</html>
